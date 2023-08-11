@@ -32,3 +32,110 @@ int main()
     return 0;
 }
 
+В отличие от вектора список не поддерживает индексный оператор. Для поиска элемента необходимо обходить список до тех пор, пока элемент не будет найден.
+Обойти список можно с помощью итераторов списка или range based for loop:
+
+#include <iostream>
+#include <list>
+using namespace std;
+int main()
+{
+
+    list<int> lst {0,1,2,3,4,5};
+    for (int i : lst) {
+        cout << i << " ";
+    }
+    
+    cout << endl;
+    
+    list<int>::iterator it = lst.begin();
+    
+    while (it != lst.end()) {
+        if (*it == 3) {
+            cout << "found 3!" << endl;
+            break;
+        }
+        ++it;    
+    }
+
+    return 0;
+}
+
+Список позволяет вставить элемент в конец, начало и произвольное место в списке.
+
+push_back — вставляет элемент в конец списка.
+push_front — вставляет элемент в начало списка.
+pop_front — удаляет элемент в начале списка.
+pop_back — удаляет элемент в конце списка.
+
+#include <iostream>
+#include <list>
+using namespace std;
+int main()
+{
+
+    list<int> lst;
+    lst.push_back(5);
+    lst.push_front(1);
+    
+    for (int i : lst) {
+        cout << i << endl;
+    }
+    
+    lst.push_front(9);
+    lst.pop_back();
+    lst.pop_front();
+    
+    for (int i : lst) {
+        cout << i << endl;
+    }
+    return 0;
+	
+	iterator insert( iterator pos, const T& value ) — вставляет элемент в позицию, находящуюся перед элементом, указанным итератором pos, и возвращает итератор на вставленный элемент.
+iterator erase( iterator pos) — удаляет элемент, на который указывает итератор pos и возвращает итератор на элемент следующий за удаленным (если pos был последним элементом, то метод вернёт end()).
+emplace_back — вставляет новый элемент в конец списка. Новый элемент создается с параметрами указанными как аргументы метода emplace_back.
+emplace_front — то же, что emplace_back, но в начало списка.
+
+#include <iostream>
+#include <list>
+using namespace std;
+struct User
+{
+    string login;
+    string password;
+    User(const string& lgn, const string& pass) : login(lgn), password(pass) {}
+};
+
+int main()
+{
+
+    list<User> lst;
+    User u1("Alex", "123");
+    
+    lst.push_back(u1);
+    lst.emplace_front("Alisa", "def");
+    lst.emplace_back("John", "pass");
+    for (User& user : lst) {
+        cout << user.login << " " << user.password << endl;
+    }
+    cout << endl;
+    
+    list<User>::iterator it = lst.begin();
+    ++it;
+    User u2("Bob", "abc");
+    list<User>::iterator userBobIt = lst.insert(it, u2);
+    
+    for (User& user : lst) {
+        cout << user.login << " " << user.password << endl;
+    }
+    cout << endl;
+    
+    lst.erase(userBobIt);
+    
+    for (User& user : lst) {
+        cout << user.login << " " << user.password << endl;
+    }
+    cout << endl;
+    
+    return 0;
+}
